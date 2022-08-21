@@ -6,6 +6,9 @@
 body {
     background-color: #FFE4C4;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 }
 
 .h1 {
@@ -15,10 +18,7 @@ body {
 
 .calculadora {
     text-align: center;
-    position: absolute;
-    margin-top: 70px;
-    margin-left: 550px;
-    margin-bottom: 50px;
+    margin: auto;
     background-color: #B22222;
     border-radius: 15px;
     padding: 20px;
@@ -60,4 +60,8 @@ body {
     height: 80px;
     font-size: 22px;
     border-radius: 3px;
+}
+
+.tudo {
+    margin: 10px 0;
 }
