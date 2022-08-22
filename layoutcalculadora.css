@@ -26,14 +26,15 @@ body {
 }
 
 #resultado {
+    margin: 20px 0;
     text-align: right;
-    margin-left: 2px;
     background-color: #FFEFD5;
     color: black;
     width: 210px;
     height: 30px;
     font-size: 22px;
     border-radius: 2px;
+    overflow: hidden;
 }
 
 .botao {
@@ -53,7 +54,6 @@ body {
 
 #vizualizador {
     text-align: right;
-    margin-left: 2px;
     background-color: #FFEFD5;
     color: black;
     width: 210px;

@@ -13,10 +13,7 @@
     </div>
     <div class="calculadora">
       <textarea id="vizualizador" disabled></textarea>
-      <br />
-      <br />
       <p id="resultado"></p>
-      <br />
       <table>
         <tr>
           <td><button class="botao" onclick="clicarOperador('/')">/</button></td>
@@ -40,7 +37,7 @@
           <td><button class="botao" onclick="clicar('1')">1</button></td>
           <td><button class="botao" onclick="clicar('2')">2</button></td>
           <td><button class="botao" onclick="clicar('3')">3</button></td>
-          <td rowspan="2"><button class="botao" style="height: 101px">=</button></td>
+          <td rowspan="2"><button class="botao" style="height: 101px" onclick="clicarOperador('=')">=</button></td>
         </tr>
         <tr>
           <td colspan="2"><button class="botao" style="width: 100px" onclick="clicar('0')">0</button></td>
@@ -52,9 +49,11 @@
       let comecar = 0;
       let comecaroperador = 0;
       var digitado;
+      const size = 100;
+      var numOpe = new Array(size);
+      var num = new Array(size);
+
       function clicar(x) {
-        const size = 100;
-        var num = new Array(size);
         numero = document.getElementById("resultado").innerHTML;
         digitado = document.getElementById("resultado").innerHTML = numero + x;
 
@@ -66,13 +65,15 @@
         }
       }
       function clicarOperador(x) {
-        const size = 100;
-        var numOpe = new Array(size);
         var operador = document.getElementById("vizualizador").innerHTML;
         document.getElementById("vizualizador").innerHTML = operador + digitado + "\n" + x;
         if (comecaroperador < size) {
           numOpe[comecaroperador] = x;
           comecaroperador++;
+
+          if (x === "=") {
+            igual();
+          }
         } else {
           alert("Pilha estourada!");
         }
@@ -82,6 +83,137 @@
       function limpar() {
         document.getElementById("resultado").innerHTML = " ";
         document.getElementById("vizualizador").innerHTML = " ";
+      }
+
+      function vezes(a, b) {
+        return +a * +b;
+      }
+      function modulo(a) {
+        if (+a > 0) {
+          return a;
+        } else {
+          return -a;
+        }
+        // return a > 0 ? a : -a;
+      }
+      function subtracao(a, b) {
+        return +a - +b;
+      }
+      function adicao(a, b) {
+        // mesma coisa que Number(a) + Number(b) -> transforma string para number
+        return +a + +b;
+      }
+      function dividir(a, b) {
+        return +a / +b;
+      }
+      function igual() {
+        operador = document.getElementById("vizualizador").innerHTML;
+
+        const indexOfVezes = [];
+        const indexOfMais = [];
+        const indexOfDividir = [];
+        const indexOfMenos = [];
+        const indexOfModulo = [];
+
+        console.log(num);
+        console.log(numOpe);
+        for (let i = 0; i <= numOpe.length; i += 1) {
+          if (numOpe[i] === "*") {
+            indexOfVezes.push(i);
+          }
+          if (numOpe[i] === "+") {
+            indexOfMais.push(i);
+          }
+          if (numOpe[i] === "-") {
+            indexOfMenos.push(i);
+          }
+          if (numOpe[i] === "/") {
+            indexOfDividir.push(i);
+          }
+          if (numOpe[i] === "%") {
+            indexOfModulo.push(i);
+          }
+        }
+
+        let soma = 0;
+
+        if (indexOfVezes.length > 0) {
+          for (let j = 0; j <= indexOfVezes.length; j += 1) {
+            total = vezes(num[j], num[j + 1]);
+
+            const antesNum = num.slice(0, j);
+            const depoisNum = num.slice(j + 2);
+            num = [...antesNum, total, ...depoisNum];
+
+            const antesOpe = numOpe.slice(0, j);
+            const depoisOpe = numOpe.slice(j + 1);
+
+            numOpe = [...antesOpe, ...depoisOpe];
+            console.log(numOpe, num);
+          }
+        }
+
+        if (indexOfMais.length > 0) {
+          for (let j = 0; j <= indexOfMais.length; j += 1) {
+            total = adicao(num[j], num[j + 1]);
+
+            const antesNum = num.slice(0, j);
+            const depoisNum = num.slice(j + 2);
+            num = [...antesNum, total, ...depoisNum];
+
+            const antesOpe = numOpe.slice(0, j);
+            const depoisOpe = numOpe.slice(j + 1);
+
+            numOpe = [...antesOpe, ...depoisOpe];
+            console.log(numOpe, num);
+          }
+        }
+        console.log(num);
+
+        document.getElementById("vizualizador").innerHTML = operador + " " + num[0];
+        //     var operadoresValidos = ["/", "*", "%", "-", "+"];
+        //     var operador = document.getElementById("vizualizador").innerHTML;
+        //     let expressao = operador.replace("\n", "").replace(" ", "").replace("\n=", "");
+        //     let total = 0;
+        //     console.log([expressao]);
+        //     if (operador.indexOf("*") > -1) {
+        //       let [esquerda, direita] = expressao.split("*");
+        //       esquerda = esquerda.replace("\n", "").replace(" ", "");
+        //       direita = direita.replace("\n", "").replace(" ", "").replace("=", "");
+        //       const [a, b] = [esquerda[esquerda.length - 1], direita[0]];
+        //       total = vezes(a, b);
+        //       expressao = esquerda.slice(0, esquerda.length - 1) + total + direita.slice(1);
+        //     }
+        //     console.log([expressao]);
+        //     if (expressao.indexOf("/") > -1) {
+        //       let [esquerda, direita] = expressao.split("/");
+        //       esquerda = esquerda.replace("\n", "").replace(" ", "");
+        //       direita = direita.replace("\n", "").replace(" ", "");
+        //       const [a, b] = [esquerda[esquerda.length - 1], direita[0]];
+        //       total = dividir(a, b);
+        //       expressao = esquerda.slice(0, esquerda.length - 1) + total + direita.slice(1);
+        //     }
+        //     console.log([expressao]);
+        //     if (expressao.indexOf("+") > -1) {
+        //       let [esquerda, direita] = expressao.split("+");
+        //       esquerda = esquerda.replace("\n", "").replace(" ", "");
+        //       direita = direita.replace("\n", "").replace(" ", "");
+        //       const [a, b] = [esquerda[esquerda.length - 1], direita[0]];
+        //       total = adicao(a, b);
+        //       expressao = esquerda.slice(0, esquerda.length - 1) + total + direita.slice(1);
+        //     }
+        //     console.log([expressao]);
+        //     if (expressao.indexOf("-") > -1) {
+        //       let [esquerda, direita] = expressao.split("-");
+        //       esquerda = esquerda.replace("\n", "").replace(" ", "");
+        //       direita = direita.replace("\n", "").replace(" ", "");
+        //       const [a, b] = [esquerda[esquerda.length - 1], direita[0]];
+        //       total = subtracao(a, b);
+        //       expressao = esquerda.slice(0, esquerda.length - 1) + total + direita.slice(1);
+        //     }
+        //     console.log([expressao]);
+        //     document.getElementById("vizualizador").innerHTML = operador + " " + expressao;
+        //   }
       }
     </script>
   </body>
